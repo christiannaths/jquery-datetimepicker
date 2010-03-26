@@ -83,7 +83,7 @@
     
     
     
-    
+    // DAYS
     
     $('#timeslider-day').slider({ 
       orientation: "vertical", min: 1, max: 31,
