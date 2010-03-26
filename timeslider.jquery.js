@@ -9,7 +9,7 @@
     timeslider:function(config, fileNames) {
       var config = $.extend({}, $.timeslider.defaults, config);
       
-      console.log(this.selector); ///////
+      //console.log(this.selector); ///////
       build(this, config)
       this.focus(function(){ show(this, config) });
       return this;
@@ -34,7 +34,7 @@
     for (var i=2000;i<=2019;i++) {
       yearRange.push(i);
     };
-    console.log(yearRange);
+    //console.log(yearRange);
     $.each(yearRange, function(index, value){
       $('#timeslider #timeslider-year ul').append("<li>" + value + "</li>");
     });
@@ -109,7 +109,7 @@
         updateInput(e, config);
       }
     });
-    console.log("built the widget"); ////////
+    //console.log("built the widget"); ////////
     
 
   };
@@ -130,7 +130,7 @@
     var minute = $('#timeslider-minute').slider("option", "value")
     var meridian = meridians[$('#timeslider-meridian').slider("option", "value")];
     var time = month + " " + day + ", " + year + " " + hour + ":" + minute + " " + meridian;
-    console.log(time);
+    //console.log(time);
     $(e).val(time);
     
   };
