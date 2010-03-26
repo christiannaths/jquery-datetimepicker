@@ -1,0 +1,8 @@
+hacking on a sliding datetime picker for jQuery. Very early stages.
+
+Goals:
+
+* jQuery plugin
+* uses jQuery UI for theming
+* pick date and time with fewer clicks
+* configurable with date ranges & formats
