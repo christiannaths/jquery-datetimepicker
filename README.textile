@@ -1,5 +1,9 @@
 hacking on a sliding datetime picker for jQuery. Very early stages.
 
+The demo page is "here":http://christiannaths.com/code/timeslider/
+
+ 
+
 Goals:
 
 * jQuery plugin
