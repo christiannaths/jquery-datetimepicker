@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>Timeslider Demo</title>
+  <link rel="stylesheet" href="smoothness/jquery-ui-1.8.custom.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="timeslider.jquery.css" type="text/css" media="screen" charset="utf-8" />
+  <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="timeslider.jquery.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(document).ready(function() {
+      $('#event-time').timeslider();
+    });
+  </script>
+</head>
+
+<body id="index" onload="">
+  <div id="parent-div">
+    <label for="event-time">Enter Time</label>
+    <input type="text" name="time" value="" id="event-time" />
+  </div>
+</body>
+</html>
