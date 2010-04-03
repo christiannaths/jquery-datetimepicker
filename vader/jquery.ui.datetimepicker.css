@@ -1,6 +1,6 @@
 /* Datepicker
 ----------------------------------*/
-.ui-datetimepicker { width: 17em; padding: .2em .2em 0; }
+.ui-datetimepicker { width: 17em; padding: .2em .2em 0; font-size:0.9em; }
 .ui-datetimepicker .ui-datetimepicker-header { position:relative; padding:.2em 0; }
 .ui-datetimepicker .ui-datetimepicker-prev, .ui-datetimepicker .ui-datetimepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }
 .ui-datetimepicker .ui-datetimepicker-prev-hover, .ui-datetimepicker .ui-datetimepicker-next-hover { top: 1px; }
@@ -65,7 +65,7 @@
 
 /* Custom */
 .ui-datetimepicker {
-  width: 27em;
+  width: 24.5em;
 }
 
 .ui-datetimepicker table {
@@ -84,7 +84,21 @@
   float:left;
   clear: right;
   overflow: hidden;
-  padding: 10px;
+  padding: 0px 2px 0px 10px;
+  font-size: 0.9em;
+}
+
+.ui-datetimepicker-clock .ui-datetimepicker-clock-hand {
+  float: left;
+  width: 2.5em;
+  height: 11.2em;
+  margin-right: 8px;
+}
+
+.ui-datetimepicker-clock .ui-datetimepicker-clock-hand .ui-datetimepicker-clock-header {
+  padding: 0.7em 0.3em;
+  font-weight: bold;
+  text-align:center;
 }
 
 .ui-datetimepicker-viewport {
@@ -92,34 +106,39 @@
   overflow:hidden;
   position: relative;
   float: left;
-  height: 100px;
+  height: 7em;
   width: 2.5em;
-  margin: 0px 0.25em;
-  background: url('viewer.png') center center no-repeat;
+  margin: 0;
+  background: none;
 }
 
-#ui-datetimepicker-meridian-viewport {
-  height: 60px;
-  top: 20px;
+.ui-datetimepicker-meridian.ui-datetimepicker-clock-hand {
+  clear: right;
+  margin:0;
+}
+
+.ui-datetimepicker-meridian-viewport {
+  top: 1.4em;
+  height: 4.2em;
+  width: 2.5em;
 }
 
 .ui-datetimepicker-selector{
-  display:block;
   position: absolute;
-  float:left;
-  top: 50%;
-  width: 100%;
-  height: 22px;
+  top: 2.6em;
+  height: 1.2em;
+  width: 2.5em;
   border: 1px solid #000;
-  z-index: 5000;
+}
+
+.ui-datetimepicker-meridian .ui-datetimepicker-selector{
+  top: 1.3em;
 }
 
 .ui-datetimepicker-clock .ui-datetimepicker-slider {
   position: relative;
-  float: left;
-  margin: 0;
   width: 2.5em;
-  height: 220px;
+  margin: 0;
   border: none;
   background: none;
 }
@@ -139,15 +158,12 @@
   position: relative;
   width: 100%;
   margin: 0;
-  top:-160px;
-  /*margin-top: 40px;*/
   padding: 0px;
-  font-size: 14px;
   list-style-type: none;
 }
 
 .ui-datetimepicker-clock .ui-datetimepicker-slider ul li {
- width: 100%;
- height: 20px;
+ padding: 0.2em;
+ height: 1em;
  text-align: center; 
 }

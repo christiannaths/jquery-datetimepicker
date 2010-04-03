@@ -44,7 +44,7 @@ function Datetimepicker() {
 		closeText: 'Done', // Display text for close link
 		prevText: 'Prev', // Display text for previous month link
 		nextText: 'Next', // Display text for next month link
-		currentText: 'Today', // Display text for current month link
+		currentText: 'Now', // Display text for current month link
 		monthNames: ['January','February','March','April','May','June',
 			'July','August','September','October','November','December'], // Names of months for drop-down and formatting
 		monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // For formatting
@@ -105,7 +105,9 @@ function Datetimepicker() {
 		altFormat: '', // The date format to use for the alternate field
 		constrainInput: true, // The input is constrained by the current date format
 		showButtonPanel: true, // True to show button panel, false to not show it
-		autoSize: false // True to size the input for the date format, false to leave as is
+		autoSize: false, // True to size the input for the date format, false to leave as is
+		show24Hour: false, // True to show time picker as 24 hour clock
+		minuteInterval: 5 // Interval of mintutes choosable on the minute dial
 	};
 	$.extend(this._defaults, this.regional['']);
 	this.dpDiv = $('<div id="' + this._mainDivId + '" class="ui-datetimepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-helper-hidden-accessible"></div>');
@@ -1427,6 +1429,8 @@ $.extend(Datetimepicker.prototype, {
 		var beforeShowDay = this._get(inst, 'beforeShowDay');
 		var showOtherMonths = this._get(inst, 'showOtherMonths');
 		var selectOtherMonths = this._get(inst, 'selectOtherMonths');
+		var show24Hour = this._get(inst, 'show24Hour');
+		var minuteInterval = this._get(inst, 'minuteInterval');
 		var calculateWeek = this._get(inst, 'calculateWeek') || this.iso8601Week;
 		var defaultDate = this._getDefaultDate(inst);
 		var html = '';
@@ -1516,25 +1520,45 @@ $.extend(Datetimepicker.prototype, {
 			// Time Picker
 			var clock = '';
 			clock += '<div class="ui-datetimepicker-clock">';
-			clock += '<div class="ui-datetimepicker-viewport ui-widget ui-corner-all ui-widget-content" id="ui-datetimepicker-hour-viewport"><div class="ui-datetimepicker-slider" id="ui-datetimepicker-hour"></div></div>';
-			clock += '<div class="ui-datetimepicker-viewport ui-widget ui-corner-all ui-widget-content" id="ui-datetimepicker-minute-viewport"><div class="ui-datetimepicker-slider" id="ui-datetimepicker-minute"></div></div>';
-			clock += '<div class="ui-datetimepicker-viewport ui-widget ui-corner-all ui-widget-content" id="ui-datetimepicker-meridian-viewport"><div class="ui-datetimepicker-slider" id="ui-datetimepicker-meridian"></div></div>';
+			  // hour
+        clock += '<div class="ui-datetimepicker-hour ui-datetimepicker-clock-hand">';
+			    clock += '<div class="ui-datetimepicker-clock-header" title="Hour">Hr</div>';
+			    clock += '<div class="ui-datetimepicker-viewport ui-widget ui-corner-all ui-widget-content ui-state-default ui-datetimepicker-hour-viewport">';
+			    clock += '<div class="ui-datetimepicker-selector ui-state-active"></div>';
+			    clock += '<div class="ui-datetimepicker-slider ui-datetimepicker-hour-slider"><div class="ui-slider-handle"><ul>';
+			    var maxHours = (show24Hour? 24 : 12);
+          for (var i=1;i<=maxHours;i++) {
+            clock += '<li>'+ i +'</li>';
+          };	
+			    clock += '</ul></div></div></div>';
+			  clock += '</div>';
+			  
+			  // minute
+			  clock += '<div class="ui-datetimepicker-minute ui-datetimepicker-clock-hand">';
+			    clock += '<div class="ui-datetimepicker-clock-header" title="Minute">Min</div>';
+  		    clock += '<div class="ui-datetimepicker-viewport ui-widget ui-corner-all ui-widget-content ui-state-default ui-datetimepicker-minute-viewport">';
+  		    clock += '<div class="ui-datetimepicker-selector ui-state-active"></div>';
+  		    clock += '<div class="ui-datetimepicker-slider ui-datetimepicker-minute-slider"><div class="ui-slider-handle"><ul>';
+          for (var i=0;i<=59;i=i+minuteInterval) {
+            clock += '<li>'+ i +'</li>';
+          };	
+  		    clock += '</ul></div></div></div>';
+  		  clock += '</div>';
+  		  
+  		  // meridian
+  		  clock += '<div class="ui-datetimepicker-meridian ui-datetimepicker-clock-hand">';
+  		    clock += '<div class="ui-datetimepicker-clock-header" title="Meridian">&nbsp;</div>';
+  		    clock += '<div class="ui-datetimepicker-viewport ui-widget ui-corner-all ui-widget-content ui-state-default ui-datetimepicker-meridian-viewport">';
+  		    clock += '<div class="ui-datetimepicker-selector ui-state-active"></div>';
+  		    clock += '<div class="ui-datetimepicker-slider ui-datetimepicker-meridian-slider"><div class="ui-slider-handle"><ul>';
+  		    if(show24Hour == false){
+    		    clock += '<li>am</li><li>pm</li>';
+          };
+			    clock += '</ul></div></div></div>';
+			  clock += '</div>';
 			clock += '</div>';
-		
+			
 			group += clock;
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			html += group;
 		}
 		html += buttonPanel + ($.browser.msie && parseInt($.browser.version,10) < 7 && !inst.inline ?
@@ -1704,65 +1728,57 @@ $.extend(Datetimepicker.prototype, {
 
 // functions to build sliders for time pickers
 function generateHourPicker(){
-  var hourRange = [];
-  for (var i=1;i<=12;i++) {
-    hourRange.push(i);
-  };
-  $('#ui-datetimepicker-hour').append("<div class='ui-slider-handle'><ul></ul></div>");
-  $('#ui-datetimepicker-hour').slider({ 
+  $('.ui-datetimepicker-hour-slider').slider({ 
     orientation: "vertical", min: 1, max: 12,
+    start: function(event, ui) {
+      $('.ui-datetimepicker-hour-slider ul li').removeClass('ui-state-active');
+    }, 
     stop: function(event, ui) {
+      $($('.ui-datetimepicker-hour-slider ul li').get(ui.value - 1)).addClass('ui-state-active');
       //updateInput(e, config);
     }
   }); 
-  $.each(hourRange, function(index, value){
-    $('#ui-datetimepicker-hour ul').append("<li>" + value + "</li>");
-  }); 
-  $('#ui-datetimepicker-hour').height("220px"); // (# of object * 20) - 20
-  $('#ui-datetimepicker-hour ul').css("top", "-160px"); // -((# of objects * 20) - 80
+  //$('.ui-datetimepicker-hour-slider').height("220px"); // (# of object * 20) - 20
+  //$('.ui-datetimepicker-hour-slider ul').css("top", "-160px"); // -((# of objects * 20) - 80
+  
+  $('.ui-datetimepicker-hour-slider').height("15.4em"); // (# of obj * 1.4em) - 1.4em
+  $('.ui-datetimepicker-hour-slider ul').css("top", "-11.2em"); // size of viewport -(5 units + 3 units)
 };
 
 function generateMinutePicker(){
-  var minuteRange = [];
-  for (var i=0;i<=55;i=i+5) {
-    minuteRange.push(i);
-  };
-  $('#ui-datetimepicker-viewport').addClass('ui-state-default');
-  $('#ui-datetimepicker-minute').append("<div class='ui-slider-handle'><ul></ul></div>");
-  $('#ui-datetimepicker-minute').slider({ 
+  $('.ui-datetimepicker-minute-slider').slider({ 
     orientation: "vertical", min: 0, max: 11,
+    start: function(event, ui) {
+      $('.ui-datetimepicker-minute-slider ul li').removeClass('ui-state-active');
+    }, 
     stop: function(event, ui) {
+      $($('.ui-datetimepicker-minute-slider ul li').get(ui.value)).addClass('ui-state-active');
       //updateInput(e, config);
     }
-  });
+  });  
+  //$('.ui-datetimepicker-minute-slider').height("220px"); // (# of object * 20) - 20
+  //$('.ui-datetimepicker-minute-slider ul').css("top", "-160px"); // -((# of objects * 20) - 80
   
-  $.each(minuteRange, function(index, value){
-    $('#ui-datetimepicker-minute ul').append("<li class=''>" + value + "</li>");
-  });
-  
-  $('#ui-datetimepicker-minute').height("220px"); // (# of object * 20) - 20
-  $('#ui-datetimepicker-minute ul').css("top", "-160px"); // -((# of objects * 20) - 80
+  $('.ui-datetimepicker-minute-slider').height("15.4em"); // (# of obj * 1.4em) - 1.4em
+  $('.ui-datetimepicker-minute-slider ul').css("top", "-11.2em"); // size of viewport -(5 units + 3 units)
 };
 
-function generateMeridianPicker(){
-  var meridians = ["am", "pm"];
-  
-  $('#ui-datetimepicker-meridian').append("<div class='ui-slider-handle'><ul></ul></div>");
-  
-  
-  $('#ui-datetimepicker-meridian').slider({ 
+function generateMeridianPicker(){  
+  $('.ui-datetimepicker-meridian-slider').slider({ 
     orientation: "vertical", min: 0, max: 1,
+    start: function(event, ui) {
+      $('.ui-datetimepicker-meridian-slider ul li').removeClass('ui-state-active');
+    }, 
     stop: function(event, ui) {
+      $($('.ui-datetimepicker-meridian-slider ul li').get(ui.value)).addClass('ui-state-active');
       //updateInput(e, config);
     }
   });
+  //$('.ui-datetimepicker-meridian-slider').height("20px"); // (# of object * 20) - 20
+  //$('.ui-datetimepicker-meridian-slider ul').css("top", "0px"); // -((# of objects * 20) - 80
   
-  $.each(meridians, function(index, value){
-    $('#ui-datetimepicker-meridian ul').append("<li>" + value + "</li>");
-  });
-  
-  $('#ui-datetimepicker-meridian').height("20px"); // (# of object * 20) - 20
-  $('#ui-datetimepicker-meridian ul').css("top", "20px"); // -((# of objects * 20) - 80
+  $('.ui-datetimepicker-meridian-slider').height("1.4em"); // (# of obj * 1.4em) - 1.4em
+  $('.ui-datetimepicker-meridian-slider ul').css("top", "1.4em"); // size of viewport -(2 units + 3 units)
 };
 
 
